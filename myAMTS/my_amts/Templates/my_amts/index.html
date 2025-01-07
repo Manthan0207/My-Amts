@@ -3,328 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMTS - Ahmedabad Bus Services</title>
+    <title>MY AMTS BUS - Modern Bus Booking</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --secondary-color: #34a853;
-            --dark-color: #202124;
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --accent-color: #dbeafe;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Map Background */
-        .map-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: url('/api/placeholder/1920/1080') center/cover;
-            opacity: 0.4;
-            z-index: -1;
-        }
-
-        /* Enhanced Navigation */
         .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            color: var(--primary-color) !important;
-            font-size: 24px;
+            background: var(--primary-color) !important;
+            padding: 0.5rem 2rem;
         }
 
         .nav-link {
-            color: var(--dark-color) !important;
+            color: white !important;
+            margin-left: 1rem;
             font-weight: 500;
-            margin: 0 10px;
-            transition: color 0.3s;
         }
 
-        .nav-link:hover {
-            color: var(--primary-color) !important;
-        }
-
-        /* Hero Section with Search */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding-top: 80px;
-        }
-
-        .search-container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
-        }
-
-        .search-box input {
-            height: 50px;
-            font-size: 16px;
-        }
-
-        /* Routes Section */
-        .routes-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px 0;
-            min-height: 100vh;
-        }
-
-        .table {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .table thead {
-            background-color: var(--primary-color);
+        .route-display {
             color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-left: 2rem;
         }
 
-        .table th, .table td {
-            padding: 15px;
-            vertical-align: middle;
+        .map-background {
+            position: fixed;
+            top: 3rem;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 3rem);
+            z-index: 0;
         }
 
-        /* Bus Results */
-        .bus-card {
+        #searchBoxContainer {
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-box {
+            position: relative;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            margin-bottom: 20px;
-            transition: transform 0.3s;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 5rem;
         }
 
-        .bus-card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Custom Buttons */
         .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.3s;
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
         }
 
         .btn-primary:hover {
-            background-color: #1557b0;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(26,115,232,0.3);
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
         }
 
-        @media (max-width: 768px) {
-            .search-container {
-                margin: 20px;
-            }
+        .bus-details {
+            display: none;
+            position: relative;
+            z-index: 2;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .bus-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bus-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .bus-card.active {
+            background: var(--accent-color);
+        }
+
+        .bus-card.hidden {
+            display: none;
+        }
+
+        .bus-number {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            gap: 1rem;
+        }
+
+        .station {
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .route-arrow {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .reopen-search {
+            position: fixed;
+            top: 5rem;
+            right: 2rem;
+            z-index: 10;
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .back-button {
+            display: none;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .back-button:hover {
+            color: var(--secondary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Map Background -->
-    <div class="map-background"></div>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-bus-alt me-2"></i>AMTS
-            </a>
+            <a class="navbar-brand fw-bold" href="#">MY AMTS BUS</a>
+            <span id="routeDisplay" class="route-display"></span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#home"><i class="fas fa-home me-1"></i>Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#routes"><i class="fas fa-route me-1"></i>Routes</a>
-                    </li>
+                <ul class="navbar-nav ms-auto nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section with Search -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="search-container">
-                        <h2 class="mb-4">Find Your Bus</h2>
-                        <div class="search-box">
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white">
-                                        <i class="fas fa-map-marker-alt text-primary"></i>
-                                    </span>
-                                    <input type="text" class="form-control" id="fromLocation" placeholder="From">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white">
-                                        <i class="fas fa-map-marker text-primary"></i>
-                                    </span>
-                                    <input type="text" class="form-control" id="toLocation" placeholder="To">
-                                </div>
-                            </div>
-                            <button class="btn btn-primary w-100" onclick="searchBuses()">
-                                <i class="fas fa-search me-2"></i>Search Buses
-                            </button>
-                        </div>
-                        <div id="busResults" class="mt-4">
-                            <!-- Bus results will appear here -->
+    <!-- OpenStreetMap Background -->
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=72.5755643%2C19.0165124%2C72.9333476%2C19.3091556&layer=mapnik"
+            class="map-background" frameborder="0"></iframe>
+
+    <!-- Search Box -->
+    <div class="container" id="searchBoxContainer">
+        <div class="search-box" id="searchBox">
+            <h4 class="text-center mb-4">Search Your Bus</h4>
+            <form id="searchForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="fromLocation" placeholder="From" required>
+                            <label for="fromLocation">From</label>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="toLocation" placeholder="To" required>
+                            <label for="toLocation">To</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100 h-100">Search Buses</button>
+                    </div>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bus Details Section -->
+    <div class="container bus-details" id="busDetails">
+        <div class="back-button" id="backButton">
+            <i class="fas fa-arrow-left me-2"></i>Back to all buses
+        </div>
+        <h4 class="mb-4 text-center">Available Buses</h4>
+        <div class="bus-card fade-in" data-bus-id="401">
+            <div class="bus-number">Bus 401</div>
+            <div class="route-info">
+                <div class="station" id="displayFrom"></div>
+                <div class="route-arrow">--></div>
+                <div class="station" id="displayTo"></div>
             </div>
         </div>
-    </section>
 
-    <!-- Routes Section -->
-    <section id="routes" class="routes-section">
-        <div class="container">
-            <h2 class="text-center mb-4">Popular Routes</h2>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Route No.</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Frequency</th>
-                            <th>First Bus</th>
-                            <th>Last Bus</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="routesTable">
-                        <!-- Routes will be populated by JavaScript -->
-                    </tbody>
-                </table>
+        <div class="bus-card fade-in" data-bus-id="402">
+            <div class="bus-number">Bus 402</div>
+            <div class="route-info">
+                <div class="station" id="displayFrom2"></div>
+                <div class="route-arrow">--></div>
+                <div class="station" id="displayTo2"></div>
             </div>
         </div>
-    </section>
 
+        <div class="bus-card fade-in" data-bus-id="403">
+            <div class="bus-number">Bus 403</div>
+            <div class="route-info">
+                <div class="station" id="displayFrom3"></div>
+                <div class="route-arrow">--></div>
+                <div class="station" id="displayTo3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reopen Search Box -->
+    <button class="btn btn-primary reopen-search" id="reopenSearch">
+        <i class="fas fa-search me-2"></i>New Search
+    </button>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Sample route data
-        const routes = [
-            { route: "1A", from: "Lal Darwaja", to: "Bopal", frequency: "10 mins", firstBus: "06:00", lastBus: "22:00" },
-            { route: "2B", from: "Kalupur", to: "Satellite", frequency: "15 mins", firstBus: "06:30", lastBus: "21:30" },
-            { route: "3C", from: "Naroda", to: "Vasna", frequency: "20 mins", firstBus: "07:00", lastBus: "21:00" },
-            { route: "4D", from: "Iscon", to: "Maninagar", frequency: "12 mins", firstBus: "06:15", lastBus: "22:30" }
-        ];
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById("searchForm");
+            const searchBox = document.getElementById("searchBox");
+            const searchBoxContainer = document.getElementById("searchBoxContainer");
+            const busDetails = document.getElementById("busDetails");
+            const reopenSearch = document.getElementById("reopenSearch");
+            const routeDisplay = document.getElementById("routeDisplay");
+            const backButton = document.getElementById("backButton");
+            const busCards = document.querySelectorAll('.bus-card');
 
-        // Populate routes
-        function populateRoutes() {
-            const routesTable = document.getElementById('routesTable');
-            routesTable.innerHTML = routes.map(route => `
-                <tr>
-                    <td><span class="badge bg-primary">${route.route}</span></td>
-                    <td><i class="fas fa-map-marker-alt text-danger me-2"></i>${route.from}</td>
-                    <td><i class="fas fa-map-marker text-success me-2"></i>${route.to}</td>
-                    <td><i class="fas fa-clock text-warning me-2"></i>${route.frequency}</td>
-                    <td><i class="fas fa-sun text-warning me-2"></i>${route.firstBus}</td>
-                    <td><i class="fas fa-moon text-primary me-2"></i>${route.lastBus}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="viewRoute('${route.route}')">
-                            <i class="fas fa-eye me-1"></i>View
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Search buses
-        function searchBuses() {
-            const from = document.getElementById('fromLocation').value;
-            const to = document.getElementById('toLocation').value;
-
-            if (!from || !to) {
-                showAlert('Please enter both locations', 'danger');
-                return;
-            }
-
-            const busResults = document.getElementById('busResults');
-            busResults.innerHTML = `
-                <div class="bus-card card">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-4">
-                                <h5 class="text-primary mb-1">Route 1A</h5>
-                                <p class="text-muted mb-0"><i class="fas fa-bus me-2"></i>Express Bus</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-2"><i class="fas fa-clock text-warning me-2"></i>Next bus in: 5 mins</p>
-                                <p class="mb-0"><i class="fas fa-rupee-sign me-2"></i>Fare: ₹25</p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-primary" onclick="bookTicket()">
-                                    <i class="fas fa-ticket-alt me-2"></i>Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Book ticket
-        function bookTicket() {
-            showAlert('Booking successful! Your ticket has been confirmed.', 'success');
-        }
-
-        // View route
-        function viewRoute(routeId) {
-            showAlert("Showing route ${routeId} details, 'info'");
-        }
-
-        // Show alert
-        function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = "alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4";
-            alertDiv.style.zIndex = '1050';
-            alertDiv.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            document.body.appendChild(alertDiv);
-            setTimeout(() => alertDiv.remove(), 3000);
-        }
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            // Handle Search Form Submission
+            searchForm.addEventListener("submit", function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
+                const fromLocation = document.getElementById("fromLocation").value.trim();
+                const toLocation = document.getElementById("toLocation").value.trim();
+
+                if (fromLocation && toLocation) {
+                    // Update Navbar with Route
+                    //routeDisplay.textContent = ${fromLocation} → ${toLocation};
+
+                    // Update bus cards with locations
+                    document.querySelectorAll('[id^="displayFrom"]').forEach(elem => {
+                        elem.textContent = fromLocation;
                     });
+                    document.querySelectorAll('[id^="displayTo"]').forEach(elem => {
+                        elem.textContent = toLocation;
+                    });
+
+                    // Hide search box and show bus details
+                    searchBoxContainer.style.display = "none";
+                    busDetails.style.display = "block";
+                    reopenSearch.style.display = "block";
+
+                    // Show all bus cards and remove active state
+                    busCards.forEach(card => {
+                        card.classList.remove('hidden', 'active');
+                        card.classList.add('fade-in');
+                    });
+                    backButton.style.display = 'none';
                 }
             });
-        });
 
-        // Initialize
-        window.onload = populateRoutes;
+            // Handle Bus Card Click
+            busCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const busId = this.getAttribute('data-bus-id');
+                    
+                    // Hide other cards
+                    busCards.forEach(otherCard => {
+                        if (otherCard !== this) {
+                            otherCard.classList.add('hidden');
+                        }
+                    });
+
+                    // Add active state to clicked card
+                    this.classList.add('active');
+                    
+                    // Show back button
+                    backButton.style.display = 'block';
+                });
+            });
+
+            // Handle Back Button Click
+            backButton.addEventListener('click', function() {
+                // Show all cards
+                busCards.forEach(card => {
+                    card.classList.remove('hidden', 'active');
+                });
+                
+                // Hide back button
+                backButton.style.display = 'none';
+            });
+
+            // Handle Reopen Search
+            reopenSearch.addEventListener("click", function() {
+                searchBoxContainer.style.display = "block";
+                busDetails.style.display = "none";
+                reopenSearch.style.display = "none";
+                routeDisplay.textContent = "";
+                
+                // Reset form
+                searchForm.reset();
+
+                // Reset bus cards
+                busCards.forEach(card => {
+                    card.classList.remove('hidden', 'active');
+                });
+                backButton.style.display = 'none';
+            });
+        });
     </script>
 </body>
 </html>
