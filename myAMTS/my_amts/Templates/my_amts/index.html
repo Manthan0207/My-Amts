@@ -1,346 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY AMTS BUS - Modern Bus Booking</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AMTS - Ahmedabad Bus Services</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1d4ed8;
-            --accent-color: #dbeafe;
-        }
+      .hero {
+        position: relative;
+        height: 600px;
+        overflow: hidden;
+        color: white;
+      }
 
-        .navbar {
-            background: var(--primary-color) !important;
-            padding: 0.5rem 2rem;
-        }
+      #map {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
 
-        .nav-link {
-            color: white !important;
-            margin-left: 1rem;
-            font-weight: 500;
-        }
+      .hero-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        border-radius: 10px;
+        width: 60%;
+        max-width: 600px;
+        transition: top 0.5s ease-in-out, transform 0.5s ease-in-out;
+      }
 
-        .route-display {
-            color: white;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-left: 2rem;
-        }
+      .hero-content.collapsed {
+        top: 100%; /* Move it completely out of view */
+        transform: translate(-50%, 0%);
+        opacity: 0; /* Make it invisible */
+        pointer-events: none; /* Disable interactions */
+        transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      }
+      
+      
+      .hero-arrow {
+        position: absolute;
+        bottom: 10px; /* Adjusted to align properly */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        cursor: pointer;
+        font-size: 24px;
+        color: white;
+        z-index: 2;
+      }
+      
 
-        .map-background {
-            position: fixed;
-            top: 3rem;
-            left: 0;
-            width: 100%;
-            height: calc(100vh - 3rem);
-            z-index: 0;
-        }
+      .feature-card {
+        transition: transform 0.3s;
+        cursor: pointer;
+      }
 
-        #searchBoxContainer {
-            position: relative;
-            z-index: 2;
-        }
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
 
-        .search-box {
-            position: relative;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            margin-top: 5rem;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-        }
-
-        .btn-primary:hover {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        .bus-details {
-            display: none;
-            position: relative;
-            z-index: 2;
-            margin-top: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .bus-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .bus-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .bus-card.active {
-            background: var(--accent-color);
-        }
-
-        .bus-card.hidden {
-            display: none;
-        }
-
-        .bus-number {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            background: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .route-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            gap: 1rem;
-        }
-
-        .station {
-            font-weight: 500;
-            font-size: 1.1rem;
-        }
-
-        .route-arrow {
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-
-        .reopen-search {
-            position: fixed;
-            top: 5rem;
-            right: 2rem;
-            z-index: 10;
-            display: none;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        .back-button {
-            display: none;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .back-button:hover {
-            color: var(--secondary-color);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      .search-box {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
     </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">MY AMTS BUS</a>
-            <span id="routeDisplay" class="route-display"></span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto nav-pills">
-                    <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
-                </ul>
-            </div>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">AMTS</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#routes">Routes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#booking">Book Tickets</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <!-- OpenStreetMap Background -->
-    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=72.5755643%2C19.0165124%2C72.9333476%2C19.3091556&layer=mapnik"
-            class="map-background" frameborder="0"></iframe>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div id="map"></div>
+      <div class="container hero-content">
+        <h1 class="display-4">Welcome to AMTS</h1>
+        <p class="lead">
+          Your reliable partner for city transportation in Ahmedabad
+        </p>
+        <div class="search-box">
+          <div class="row g-2">
+            <div class="col-md-4">
+              <input
+                type="text"
+                class="form-control"
+                id="fromLocation"
+                placeholder="From"
+              />
+            </div>
+            <div class="col-md-4">
+              <input
+                type="text"
+                class="form-control"
+                id="toLocation"
+                placeholder="To"
+              />
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary w-100" onclick="searchBuses()">
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-arrow" id="heroArrow" onclick="toggleHeroContent()">
+        ▲
+      </div>
+    </section>
 
-    <!-- Search Box -->
-    <div class="container" id="searchBoxContainer">
-        <div class="search-box" id="searchBox">
-            <h4 class="text-center mb-4">Search Your Bus</h4>
-            <form id="searchForm">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="fromLocation" placeholder="From" required>
-                            <label for="fromLocation">From</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="toLocation" placeholder="To" required>
-                            <label for="toLocation">To</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100 h-100">Search Buses</button>
-                    </div>
+    <!-- Features Section -->
+    <section class="py-5">
+      <!-- Features Section -->
+      <section class="py-5">
+        <div class="container">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card feature-card h-100 d-flex flex-column">
+                <div class="card-body text-center flex-grow-1">
+                  <h3>Find Routes</h3>
+                  <p>Explore all AMTS bus routes and plan your journey</p>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Bus Details Section -->
-    <div class="container bus-details" id="busDetails">
-        <div class="back-button" id="backButton">
-            <i class="fas fa-arrow-left me-2"></i>Back to all buses
-        </div>
-        <h4 class="mb-4 text-center">Available Buses</h4>
-        <div class="bus-card fade-in" data-bus-id="401">
-            <div class="bus-number">Bus 401</div>
-            <div class="route-info">
-                <div class="station" id="displayFrom"></div>
-                <div class="route-arrow">--></div>
-                <div class="station" id="displayTo"></div>
+                <div class="card-footer bg-white border-0 text-center">
+                  <button
+                    class="btn btn-outline-primary"
+                    onclick="showRoutes()"
+                  >
+                    View Routes
+                  </button>
+                </div>
+              </div>
             </div>
-        </div>
-
-        <div class="bus-card fade-in" data-bus-id="402">
-            <div class="bus-number">Bus 402</div>
-            <div class="route-info">
-                <div class="station" id="displayFrom2"></div>
-                <div class="route-arrow">--></div>
-                <div class="station" id="displayTo2"></div>
+            <div class="col-md-4">
+              <div class="card feature-card h-100 d-flex flex-column">
+                <div class="card-body text-center flex-grow-1">
+                  <h3>Book Tickets</h3>
+                  <p>Book your bus tickets online with ease</p>
+                </div>
+                <div class="card-footer bg-white border-0 text-center">
+                  <button
+                    class="btn btn-outline-primary"
+                    onclick="showBooking()"
+                  >
+                    Book Now
+                  </button>
+                </div>
+              </div>
             </div>
-        </div>
-
-        <div class="bus-card fade-in" data-bus-id="403">
-            <div class="bus-number">Bus 403</div>
-            <div class="route-info">
-                <div class="station" id="displayFrom3"></div>
-                <div class="route-arrow">--></div>
-                <div class="station" id="displayTo3"></div>
+            <div class="col-md-4">
+              <div class="card feature-card h-100 d-flex flex-column">
+                <div class="card-body text-center flex-grow-1">
+                  <h3>Live Tracking</h3>
+                  <p>Track your bus in real-time</p>
+                </div>
+                <div class="card-footer bg-white border-0 text-center">
+                  <button
+                    class="btn btn-outline-primary"
+                    onclick="showTracking()"
+                  >
+                    Track Bus
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
+      </section>
+    </section>
 
-    <!-- Reopen Search Box -->
-    <button class="btn btn-primary reopen-search" id="reopenSearch">
-        <i class="fas fa-search me-2"></i>New Search
-    </button>
+    <!-- Routes Section -->
+    <section id="routes" class="py-5 bg-light">
+      <div class="container">
+        <h2 class="text-center mb-4">Popular Routes</h2>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Route No.</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Frequency</th>
+                <th>First Bus</th>
+                <th>Last Bus</th>
+              </tr>
+            </thead>
+            <tbody id="routesTable">
+              <!-- Routes will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-    <!-- Bootstrap JS -->
+    <!-- Booking Section -->
+    <section id="booking" class="py-5 d-none">
+      <div class="container">
+        <h2 class="text-center mb-4">Available Buses</h2>
+        <div id="busResults">
+          <!-- Bus results will be populated by JavaScript -->
+        </div>
+        <p id="noBusMessage" class="text-center text-danger mt-3 d-none">
+          No buses available for the selected route.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>Contact Us</h5>
+            <p>Email: info@amts.com<br />Phone: 1800-123-4567</p>
+          </div>
+          <div class="col-md-4">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-white">Terms & Conditions</a></li>
+              <li><a href="#" class="text-white">Privacy Policy</a></li>
+              <li><a href="#" class="text-white">FAQs</a></li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5>Download Our App</h5>
+            <button class="btn btn-outline-light me-2">App Store</button>
+            <button class="btn btn-outline-light">Play Store</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchForm = document.getElementById("searchForm");
-            const searchBox = document.getElementById("searchBox");
-            const searchBoxContainer = document.getElementById("searchBoxContainer");
-            const busDetails = document.getElementById("busDetails");
-            const reopenSearch = document.getElementById("reopenSearch");
-            const routeDisplay = document.getElementById("routeDisplay");
-            const backButton = document.getElementById("backButton");
-            const busCards = document.querySelectorAll('.bus-card');
+      // Sample route data
+      const routes = [
+        {
+          route: "1A",
+          from: "Lal Darwaja",
+          to: "Bopal",
+          frequency: "10 mins",
+          firstBus: "06:00",
+          lastBus: "22:00",
+        },
+        {
+          route: "2B",
+          from: "Kalupur",
+          to: "Satellite",
+          frequency: "15 mins",
+          firstBus: "06:30",
+          lastBus: "21:30",
+        },
+        {
+          route: "3C",
+          from: "Naroda",
+          to: "Vasna",
+          frequency: "20 mins",
+          firstBus: "07:00",
+          lastBus: "21:00",
+        },
+      ];
 
-            // Handle Search Form Submission
-            searchForm.addEventListener("submit", function(e) {
-                e.preventDefault();
-                const fromLocation = document.getElementById("fromLocation").value.trim();
-                const toLocation = document.getElementById("toLocation").value.trim();
+      // Populate routes table
+      function populateRoutes() {
+        const routesTable = document.getElementById("routesTable");
+        routesTable.innerHTML = routes
+          .map(
+            (route) => `
+                <tr>
+                    <td>${route.route}</td>
+                    <td>${route.from}</td>
+                    <td>${route.to}</td>
+                    <td>${route.frequency}</td>
+                    <td>${route.firstBus}</td>
+                    <td>${route.lastBus}</td>
+                </tr>
+            `
+          )
+          .join("");
+      }
 
-                if (fromLocation && toLocation) {
-                    // Update Navbar with Route
-                    //routeDisplay.textContent = ${fromLocation} → ${toLocation};
+      // Search buses function
+      function toggleHeroContent() {
+        const heroContent = document.querySelector(".hero-content");
+        const heroArrow = document.getElementById("heroArrow");
+      
+        if (heroContent.classList.contains("collapsed")) {
+          heroContent.classList.remove("collapsed");
+          heroArrow.innerHTML = "▼";
+        } else {
+          heroContent.classList.add("collapsed");
+          heroArrow.innerHTML = "▲";
+        }
+      }
+       
 
-                    // Update bus cards with locations
-                    document.querySelectorAll('[id^="displayFrom"]').forEach(elem => {
-                        elem.textContent = fromLocation;
-                    });
-                    document.querySelectorAll('[id^="displayTo"]').forEach(elem => {
-                        elem.textContent = toLocation;
-                    });
+      function searchBuses() {
+        const from = document.getElementById("fromLocation").value.trim();
+        const to = document.getElementById("toLocation").value.trim();
+      
+        if (!from || !to) {
+          alert("Please fill in both 'From' and 'To' fields");
+          return;
+        }
+      
+        // Collapse hero-content
+        const heroContent = document.querySelector(".hero-content");
+        const heroArrow = document.getElementById("heroArrow");
+        heroContent.classList.add("collapsed");
+        heroArrow.innerHTML = "▲";
+      
+        const busResults = document.getElementById("busResults");
+        const bookingSection = document.getElementById("booking");
+        const noBusMessage = document.getElementById("noBusMessage");
+      
+        busResults.innerHTML = "";
+        noBusMessage.classList.add("d-none");
+      
+        // Correct the filtering logic
+        const foundBuses = routes.filter(
+          (route) =>
+            route.from.toLowerCase().includes(from.toLowerCase()) &&
+            route.to.toLowerCase().includes(to.toLowerCase())
+        );
+      
+        if (foundBuses.length > 0) {
+          busResults.innerHTML = foundBuses
+            .map(
+              (route) => `
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3">
+                    <h5>Route ${route.route}</h5>
+                    <p>Express Bus</p>
+                  </div>
+                  <div class="col-md-3">
+                    <p>Departure: 08:00</p>
+                    <p>Duration: 45 mins</p>
+                  </div>
+                  <div class="col-md-3">
+                    <p>Available Seats: 32</p>
+                    <p>Fare: ₹25</p>
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btn btn-primary" onclick="bookTicket()">Book Now</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `
+            )
+            .join("");
+        } else {
+          noBusMessage.classList.remove("d-none");
+        }
+      
+        bookingSection.classList.remove("d-none");
+        location.href = "#booking";
+      }
+      
 
-                    // Hide search box and show bus details
-                    searchBoxContainer.style.display = "none";
-                    busDetails.style.display = "block";
-                    reopenSearch.style.display = "block";
+      // Show routes function
+      function showRoutes() {
+        location.href = "#routes";
+      }
 
-                    // Show all bus cards and remove active state
-                    busCards.forEach(card => {
-                        card.classList.remove('hidden', 'active');
-                        card.classList.add('fade-in');
-                    });
-                    backButton.style.display = 'none';
-                }
-            });
+      // Show booking function
+      function showBooking() {
+        location.href = "#booking";
+      }
 
-            // Handle Bus Card Click
-            busCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const busId = this.getAttribute('data-bus-id');
-                    
-                    // Hide other cards
-                    busCards.forEach(otherCard => {
-                        if (otherCard !== this) {
-                            otherCard.classList.add('hidden');
-                        }
-                    });
+      // Show tracking function
+      function showTracking() {
+        alert("Live tracking feature will be implemented here");
+      }
 
-                    // Add active state to clicked card
-                    this.classList.add('active');
-                    
-                    // Show back button
-                    backButton.style.display = 'block';
-                });
-            });
+      // Initialize routes on page load
+      window.onload = populateRoutes;
 
-            // Handle Back Button Click
-            backButton.addEventListener('click', function() {
-                // Show all cards
-                busCards.forEach(card => {
-                    card.classList.remove('hidden', 'active');
-                });
-                
-                // Hide back button
-                backButton.style.display = 'none';
-            });
+      // Initialize Leaflet Map
+      document.addEventListener("DOMContentLoaded", function () {
+        const map = L.map("map").setView([23.0225, 72.5714], 13); // Ahmedabad coordinates
 
-            // Handle Reopen Search
-            reopenSearch.addEventListener("click", function() {
-                searchBoxContainer.style.display = "block";
-                busDetails.style.display = "none";
-                reopenSearch.style.display = "none";
-                routeDisplay.textContent = "";
-                
-                // Reset form
-                searchForm.reset();
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+        }).addTo(map);
 
-                // Reset bus cards
-                busCards.forEach(card => {
-                    card.classList.remove('hidden', 'active');
-                });
-                backButton.style.display = 'none';
-            });
-        });
+        L.marker([23.0225, 72.5714])
+          .addTo(map)
+          .bindPopup("Welcome to AMTS!")
+          .openPopup();
+      });
     </script>
-</body>
+  </body>
 </html>
