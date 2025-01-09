@@ -1,0 +1,16 @@
+[
+    {
+        "bus_number": "33",
+        "stops": [  
+            {"name": "Gokul Park", "order": 1, "latitude": 23.03145, "longitude": 72.65191},
+            {"name": "Gandhi Park", "order": 2, "latitude": 23.02777, "longitude": 72.64104}
+        ]
+    },
+    {
+        "bus_number": "58",
+        "stops": [
+            {"name": "Thakkar Nagar", "order": 1, "latitude": 23.03910, "longitude": 72.63885},
+            {"name": "India Colony", "order": 2, "latitude": 23.03869, "longitude": 72.63423}
+        ]
+    }
+]
