@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Stops Map</title>
+    <!-- Add Leaflet CSS and JS as shown earlier -->
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <style>
+        #map {
+            height: 100vh;
+            width: 100vw;
+          }
+    </style>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Bus Stops Map</h1>
+    <div id="map"></div>
+
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([23.033863, 72.585022], 12); // Default view of India
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);                       
+        
+        // Pass the bus data from Django to JavaScript
+        var busData = {{ bus_data|safe }};
+        
+        // Plot each stop on the map
+        busData.forEach(function(stop) {
+            var coordinates = stop.coordinates; // [latitude, longitude]
+            var marker = L.marker(coordinates).addTo(map);
+            
+            // Add popup information
+            marker.bindPopup(
+                `<strong>Bus No:</strong> ${stop.bus_no}<br>
+                 <strong>Stop Name:</strong> ${stop.stop_name}<br>
+                 <strong>Order:</strong> ${stop.order}`
+            );
+        }); 
+    </script>
+</body>
+</html>

@@ -2,15 +2,91 @@
     {
         "bus_number": "33",
         "stops": [  
-            {"name": "Gokul Park", "order": 1, "latitude": 23.03145, "longitude": 72.65191},
-            {"name": "Gandhi Park", "order": 2, "latitude": 23.02777, "longitude": 72.64104}
+            {"name": "Gokul Park", "order": 1, "coordinates": [23.03145, 72.65191]},
+            {"name": "Gandhi Park", "order": 2, "coordinates": [23.02777, 72.64104]},
+            {"name": "Khodiyar Nagar", "order": 3, "coordinates": [23.03268, 72.63918]},
+            {"name": "Bapu Nagar", "order": 4, "coordinates": [23.03388, 72.63406]},
+            {"name": "Bapu Nagar Char Rasta", "order": 5, "coordinates": [23.03495, 72.62937]},
+            {"name": "Bombay Housing", "order": 6, "coordinates": [23.03504, 72.61747]},
+            {"name": "Sharda Ben", "order": 7, "coordinates": [23.03180, 72.61150]},
+            {"name": "Kalupur", "order": 8, "coordinates": [23.03017, 72.60041]},
+            {"name": "Sarangpur", "order": 9, "coordinates": [23.02396, 72.59961]},
+            {"name": "Raipur", "order": 10, "coordinates": [23.01696, 72.59397]},
+            {"name": "MNC", "order": 11, "coordinates": [23.01971, 72.58615]},
+            {"name": "Lal Darwaja", "order": 12, "coordinates": [23.02458, 72.57865]}
         ]
     },
     {
         "bus_number": "58",
         "stops": [
-            {"name": "Thakkar Nagar", "order": 1, "latitude": 23.03910, "longitude": 72.63885},
-            {"name": "India Colony", "order": 2, "latitude": 23.03869, "longitude": 72.63423}
+            {"name": "Thakkar Nagar", "order": 1, "coordinates": [23.03910, 72.63885]},
+            {"name": "India Colony", "order": 2, "coordinates": [23.03869, 72.63423]},
+            {"name": "Vijay Chowk", "order": 3, "coordinates": [23.03863, 72.63121]},
+            {"name": "Bapu Nagar Char Rasta", "order": 4, "coordinates": [23.03495, 72.62937]},
+            {"name": "Bombay Housing", "order": 5, "coordinates": [23.03504, 72.61747]},
+            {"name": "Sharda Ben", "order": 6, "coordinates": [23.03180, 72.61150]},
+            {"name": "Kalupur", "order": 7, "coordinates": [23.03017, 72.60041]},
+            {"name": "Sarangpur", "order": 8, "coordinates": [23.02396, 72.59961]},
+            {"name": "Raipur", "order": 9, "coordinates": [23.01696, 72.59397]},
+            {"name": "Gita Mandir", "order": 10, "coordinates": [23.01483, 72.59125]},
+            {"name": "Jamalpur", "order": 11, "coordinates": [23.01063, 72.57777]},
+            {"name": "Paldi", "order": 12, "coordinates": [23.01370, 72.56476]}
+        ]
+    },
+    {
+        "bus_number": "56",
+        "stops": [
+            {"name": "Gopal Chowk", "order": 1, "coordinates": [23.04678, 72.65712]},
+            {"name": "Shivaji Chowk", "order": 2, "coordinates": [23.05012, 72.65389]},
+            {"name": "Sardar Patel Chowk", "order": 3, "coordinates": [23.05063, 72.64901]},
+            {"name": "Krishna Nagar", "order": 4, "coordinates": [23.05705, 72.64326]},
+            {"name": "Bajrang Ashram", "order": 5, "coordinates": [23.04768, 72.64113]},
+            {"name": "Thakkar Nagar", "order": 6, "coordinates": [23.03910, 72.63885]},
+            {"name": "Bapu Nagar Char Rasta", "order": 7, "coordinates": [23.03495, 72.62937]},
+            {"name": "Bombay Housing", "order": 8, "coordinates": [23.03504, 72.61747]},
+            {"name": "Sharda Ben", "order": 9, "coordinates": [23.03180, 72.61150]},
+            {"name": "Kalupur", "order": 10, "coordinates": [23.03017, 72.60041]},
+            {"name": "Sarangpur", "order": 11, "coordinates": [23.02396, 72.59961]},
+            {"name": "Raipur", "order": 12, "coordinates": [23.01696, 72.59397]},
+            {"name": "MNC", "order": 13, "coordinates": [23.01971, 72.58615]},
+            {"name": "Lal Darwaja", "order": 14, "coordinates": [23.02458, 72.57865]}
+        ]
+    },
+    {
+        "bus_number": "31/5",
+        "stops": [
+            {"name": "Lal Darwaja", "order": 1, "coordinates": [23.02458, 72.57865]},
+            {"name": "VS Hospital", "order": 2, "coordinates": [23.02163, 72.57138]},
+            {"name": "Anjali Char Rasta", "order": 3, "coordinates": [23.00315, 72.55187]},
+            {"name": "Vasna", "order": 4, "coordinates": [23.00180, 72.54801]},
+            {"name": "Vishala", "order": 5, "coordinates": [22.99528, 72.53205]},
+            {"name": "Khursid Park", "order": 6, "coordinates": [22.99112, 72.51860]},
+            {"name": "Ambar Tower", "order": 7, "coordinates": [22.98896, 72.51259]},
+            {"name": "Sarkhej", "order": 8, "coordinates": [22.98752, 72.50353]},
+            {"name": "Ujala", "order": 9, "coordinates": [22.98042, 72.49255]},
+            {"name": "Sanand Chowkdi", "order": 10, "coordinates": [22.98701, 72.49388]},
+            {"name": "LJ College", "order": 11, "coordinates": [22.98712, 72.48893]}
+        ]
+    },
+    {
+        "bus_number": "130",
+        "stops": [
+            {"name": "Naroda", "order": 1, "coordinates": [23.06424, 72.64280]},
+            {"name": "Krishna Nagar", "order": 2, "coordinates": [23.05705, 72.64326]},
+            {"name": "Vijay Park", "order": 3, "coordinates": [23.05123, 72.64201]},
+            {"name": "Bajrang Ashram", "order": 4, "coordinates": [23.04768, 72.64113]},
+            {"name": "Khodiyar Nagar", "order": 5, "coordinates": [23.03268, 72.63918]},
+            {"name": "Soni ni Chali", "order": 6, "coordinates": [23.02203, 72.63830]},
+            {"name": "Rabari Colony", "order": 7, "coordinates": [23.00433, 72.63713]},
+            {"name": "Purvadeep Society", "order": 8, "coordinates": [22.99605, 72.63437]},
+            {"name": "Jashoda Nagar", "order": 9, "coordinates": [22.98375, 72.62412]},
+            {"name": "Ghodasar", "order": 10, "coordinates": [22.97839, 72.61015]},
+            {"name": "Isanpur", "order": 11, "coordinates": [22.97552, 72.60076]},
+            {"name": "Narol", "order": 12, "coordinates": [22.97288, 72.58951]},
+            {"name": "Chandola", "order": 13, "coordinates": [22.98203, 72.58568]},
+            {"name": "Danilimda", "order": 14, "coordinates": [22.99608, 72.57912]},
+            {"name": "Chadra Nagar", "order": 15, "coordinates": [22.99980, 72.55804]},
+            {"name": "Anjali Char Rasta", "order": 16, "coordinates": [23.00315, 72.55187]}
         ]
     }
 ]

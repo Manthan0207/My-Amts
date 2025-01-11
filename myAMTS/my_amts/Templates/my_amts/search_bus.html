@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Bus Routes</title>
+    <style>
+        /* Basic styling; customize as needed */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .error {
+            color: red;
+        }
+        .stops {
+            margin-top: 20px;
+        }
+        .stop {
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin-bottom: 6px;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <h1>Search Routes by Bus Number</h1>
+
+    <!-- Search Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="bus_no" placeholder="Enter bus number" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display error if the bus is not found -->
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <!-- Display bus info if found -->
+    {% if bus %}
+        <h2>Bus Number: {{ bus.bus_number }}</h2>
+        <div class="stops">
+            <h3>Stops:</h3>
+            {% for stop in stops %}
+                <div class="stop">
+                    <strong>Name:</strong> {{ stop.name }} <br>
+                    <strong>Order:</strong> {{ stop.order }} <br>
+                    <strong>Coordinates:</strong> {{ stop.coordinates }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</body>
+</html>

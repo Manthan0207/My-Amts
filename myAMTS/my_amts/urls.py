@@ -23,5 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("", views.home,name="Home"),
     path('login/',views.login_view,name="login"),
-    path('signup/',views.signup,name="signup")
+    path('signup/',views.signup,name="signup"),
+    path('buses/',views.bus_list,name="buses"),
+    path('search_bus/', views.search_bus, name='search_bus'),
 ]
