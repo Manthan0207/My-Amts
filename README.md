@@ -90,29 +90,14 @@ MyAMTS Web is a user-friendly platform designed to provide real-time information
    ```bash
    git clone https://github.com/Manthan0207/My-Amts.git
    cd My-Amts
+   cd my_amts
    ```
 
-2. **Database Setup**
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
-
-3. **Load AMTS Data**
-   ```bash
-   python manage.py loaddata fixtures/bus_routes.json
-   python manage.py loaddata fixtures/bus_stops.json
-   python manage.py loaddata fixtures/schedules.json
-   ```
-
-4. **Run the application**
+2. **Run the application**
    ```bash
    python manage.py runserver
    ```
 
-5. **Access the application**
-   
-   Open `http://127.0.0.1:8000` in your browser
 
 
 ## 🎯 Core Functionality
